@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {View, Text, StyleSheet, TextInput, Button, Alert, Image} from 'react-native';
 
-const ERDScreen = ({ navigation }) => {
+const ERDScreen = ({ navigation,route }) => {
     const [erd, setErd] = useState('');
 
     const handleNext = () => {
@@ -10,19 +10,19 @@ const ERDScreen = ({ navigation }) => {
             return;
         }
 
-        // Si tienes una siguiente pantalla, navega así:
-        // navigation.navigate("OtraPantalla", { erd: parseFloat(erd) });
-        navigation.navigate("PDC", {erd: parseFloat(erd) });
+
+        navigation.navigate("PDC", {
+            erd: parseFloat(erd),
+            agujeros: route.params.agujeros,
+        });
 
         console.log("ERD ingresado:", erd);
     };
 
     return (
         <View style={styles.container}>
-            <Image source={require("../assets/what-is-erd.png")} style={styles.image} />
-
             <Text style={styles.title}>ERD - Diámetro efectivo de la llanta</Text>
-
+            <Image source={require("../assets/what-is-erd.png")} style={styles.image} />
             <TextInput
                 style={styles.input}
                 placeholder="Ingresa el ERD en mm"
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
         color: '#333',
+
     },
     input: {
         height: 50,
@@ -64,6 +65,7 @@ const styles = StyleSheet.create({
         height: 250,
         marginBottom: 40,
         resizeMode: 'contain',
+        justifyContent: 'center',
 
     },
 });

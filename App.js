@@ -7,6 +7,8 @@ import CalculadoraScreen from './screens/CalculadoraScreen';
 import ERDScreen from './screens/ERDScreen';
 import PDCScreen from './screens/PDCScreen';
 import WrWlScreen from './screens/WrWlScreen';
+import CrucesScreen from "./screens/CrucesScreen";
+import ResultadoScreen from "./screens/ResultadoScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +21,8 @@ export default function App() {
               <Stack.Screen name="ERD" component={ERDScreen} />
               <Stack.Screen name="PDC" component={PDCScreen} />
               <Stack.Screen name="WrWl" component={WrWlScreen} />
+              <Stack.Screen name="Cruces" component={CrucesScreen} />
+              <Stack.Screen name="Resultado" component={ResultadoScreen} />
           </Stack.Navigator>
       </NavigationContainer>
 

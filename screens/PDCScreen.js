@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {View, Text, StyleSheet, TextInput, Button, Alert, Image} from 'react-native';
 
-const PDCScreen = ({ navigation }) => {
+const PDCScreen = ({ navigation, route}) => {
     const [pdcl, setPdcl] = useState('');
     const [pdcr, setPdcr] = useState('');
 
@@ -14,7 +14,12 @@ const PDCScreen = ({ navigation }) => {
 
         // Si tienes una siguiente pantalla, navega así:
         // navigation.navigate("OtraPantalla", { erd: parseFloat(erd) });
-        navigation.navigate("WrWl", { pdcl: parseFloat(pdcl), pdcr: parseFloat(pdcr) });
+        navigation.navigate("WrWl", {
+            pdcl: parseFloat(pdcl),
+            pdcr: parseFloat(pdcr),
+            erd: route.params.erd,
+            agujeros: route.params.agujeros,
+        });
 
     };
 

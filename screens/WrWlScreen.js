@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {View, Text, StyleSheet, TextInput, Button, Alert, Image} from 'react-native';
 
-const WrWlScreen = ({ navigation }) => {
+const WrWlScreen = ({ navigation, route }) => {
     const [wr, setWr] = useState('');
     const [wl, setWl] = useState('');
 
@@ -12,11 +12,17 @@ const WrWlScreen = ({ navigation }) => {
             return;
         }
 
-        navigation.navigate("WrWl", { wr: parseFloat(wr), wl: parseFloat(wl) });
-
+        navigation.navigate("Cruces", {
+            wr: parseFloat(wr),
+            wl: parseFloat(wl),
+            pdcl: route.params.pdcl,
+            pdcr: route.params.pdcr,
+            erd: route.params.erd,
+            agujeros: route.params.agujeros,
+        });
     };
 
-    return (
+        return (
         <View style={styles.container}>
             <Image source={require("../assets/PDC.png")} style={styles.image} />
 

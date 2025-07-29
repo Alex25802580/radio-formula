@@ -52,9 +52,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 8,
     },
-    cameraButton: {
-        backgroundColor: '#007AFF',
-    },
+
     buttonText: {
         color: '#fff',
         fontSize: 16,
