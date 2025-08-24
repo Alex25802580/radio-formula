@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
-const CalculadoraScreen = ({ navigation }) => {
+const HolesScreen = ({ navigation }) => {
     const [agujeros, setAgujeros] = useState(null);
 
     const opciones = [
+        { label: '16 agujeros', value: 16 },
+        { label: '20 agujeros', value: 20 },
         { label: '24 agujeros', value: 24 },
         { label: '28 agujeros', value: 28 },
         { label: '32 agujeros', value: 32 },
@@ -52,6 +54,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#333',
+        fontFamily: 'sans-serif-condensed',
+
     },
     selected: {
         marginTop: 20,
@@ -88,4 +92,4 @@ const pickerSelectStyles = {
     },
 };
 
-export default CalculadoraScreen;
+export default HolesScreen;

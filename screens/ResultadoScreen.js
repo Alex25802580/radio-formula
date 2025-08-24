@@ -1,13 +1,19 @@
-import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Button, TextInput, Modal } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ResultadoScreen = ({ route, navigation }) => {
     const { erd, pdcl, pdcr, wl, wr, cruces, agujeros } = route.params;
 
-    const calcularLongitudRadio = ({ erd, pcd, flangeOffset, cruces, agujeros }) => {
-        const pi = Math.PI;
-        const alpha = (2 * pi * cruces) / (agujeros / 2);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [llanta, setLlanta] = useState("");
+    const [buje, setBuje] = useState("");
 
+    const calcularLongitudRadio = ({ erd, pcd, flangeOffset, cruces, agujeros }) => {
+        // α = ángulo entre agujeros de la misma ala según nº de cruces
+        const alpha = (2 * Math.PI * cruces) / (agujeros / 2);
+
+        // Fórmula clásica
         let L = Math.sqrt(
             Math.pow(erd / 2, 2) +
             Math.pow(pcd / 2, 2) -
@@ -15,32 +21,67 @@ const ResultadoScreen = ({ route, navigation }) => {
             Math.pow(flangeOffset, 2)
         );
 
-        // Restar 3mm al resultado final, según lo solicitado previamente.
-        L = L - 3;
+        // Ajuste típico por asiento de cabecilla/nipple
+        L = L - 2;
 
-        // Redondear el resultado a un número entero para el rango.
         const roundedL = Math.round(L);
-
-        // Calcular el margen de +/- 1mm
-        const lowerBound = roundedL - 1;
-        const upperBound = roundedL + 1;
-
-        // Devolver el resultado como un rango
-        return `${lowerBound}-${upperBound}`;
+        return `${roundedL - 1}-${roundedL + 1}`;
     };
 
     const radioIzquierdo = calcularLongitudRadio({ erd, pcd: pdcl, flangeOffset: wl, cruces, agujeros });
     const radioDerecho = calcularLongitudRadio({ erd, pcd: pdcr, flangeOffset: wr, cruces, agujeros });
 
+    const guardarRueda = async () => {
+        const nuevaRueda = {
+            id: Date.now().toString(),
+            llanta,
+            buje,
+            radioIzquierdo,
+            radioDerecho,
+        };
+
+        try {
+            const data = await AsyncStorage.getItem("ruedas");
+            const ruedas = data ? JSON.parse(data) : [];
+            ruedas.push(nuevaRueda);
+            await AsyncStorage.setItem("ruedas", JSON.stringify(ruedas));
+        } catch (error) {
+            console.log("Error al guardar rueda", error);
+        }
+
+        setModalVisible(false);
+        navigation.navigate("SavedWheels");
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Resultado</Text>
-            <Text style={styles.result}>Longitud del radio izquierdo: {radioIzquierdo} mm</Text>
-            <Text style={styles.result}>Longitud del radio derecho: {radioDerecho} mm</Text>
+            <Text style={styles.result}>Radio izquierdo: {radioIzquierdo} mm</Text>
+            <Text style={styles.result}>Radio derecho: {radioDerecho} mm</Text>
 
             <View style={styles.buttonContainer}>
                 <Button title="Volver al inicio" onPress={() => navigation.popToTop()} />
+                <Button title="Guardar" onPress={() => setModalVisible(true)} />
             </View>
+
+            <Modal visible={modalVisible} animationType="slide">
+                <View style={{ padding: 20 }}>
+                    <Text>Nombre de la llanta:</Text>
+                    <TextInput
+                        value={llanta}
+                        onChangeText={setLlanta}
+                        style={{ borderWidth: 1, marginBottom: 10, padding: 8 }}
+                    />
+                    <Text>Nombre del buje:</Text>
+                    <TextInput
+                        value={buje}
+                        onChangeText={setBuje}
+                        style={{ borderWidth: 1, marginBottom: 10, padding: 8 }}
+                    />
+                    <Button title="Guardar rueda" onPress={guardarRueda} />
+                    <Button title="Cancelar" onPress={() => setModalVisible(false)} />
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -48,25 +89,27 @@ const ResultadoScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
         paddingHorizontal: 20,
+        paddingTop: 40,
         backgroundColor: '#fff',
     },
     title: {
         fontSize: 28,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 15,
         textAlign: 'center',
         color: '#333',
+        fontFamily: 'sans-serif-condensed',
+
     },
     result: {
         fontSize: 20,
-        marginBottom: 10,
+        marginBottom: 8,
         textAlign: 'center',
         color: '#007AFF',
     },
     buttonContainer: {
-        marginTop: 40,
+        marginTop: 20,
         alignItems: 'center',
     },
 });

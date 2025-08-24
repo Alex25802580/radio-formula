@@ -6,15 +6,14 @@ const CrucesScreen = ({ navigation, route }) => {
     const [cruces, setCruces] = useState(null);
 
     const opciones = [
-        { label: '0 cruces', value: 0 },
-        { label: '1 cruces', value: 1 },
+        { label: '0 cruces (Radial)', value: 0 },
+        { label: '1 cruce', value: 1 },
         { label: '2 cruces', value: 2 },
         { label: '3 cruces', value: 3 },
-
     ];
 
     const handleNext = () => {
-        if (!cruces) {
+        if (cruces === null) {
             Alert.alert("Selecciona un valor", "Por favor, elige un número de cruces.");
             return;
         }
@@ -29,6 +28,7 @@ const CrucesScreen = ({ navigation, route }) => {
             cruces,
         });
     };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Selecciona el número de cruces</Text>
@@ -39,7 +39,11 @@ const CrucesScreen = ({ navigation, route }) => {
                 style={pickerSelectStyles}
                 value={cruces}
             />
-            {cruces && <Text style={styles.selected}>Seleccionado: {cruces}</Text>}
+            {cruces !== null && (
+                <Text style={styles.selected}>
+                    Seleccionado: {cruces === 0 ? "0 (Radial)" : `${cruces}`}
+                </Text>
+            )}
 
             <View style={styles.buttonContainer}>
                 <Button title="Siguiente" onPress={handleNext} />
@@ -60,6 +64,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#333',
+        fontFamily: 'sans-serif-condensed',
+
     },
     selected: {
         marginTop: 20,

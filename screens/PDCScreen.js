@@ -12,8 +12,6 @@ const PDCScreen = ({ navigation, route}) => {
             return;
         }
 
-        // Si tienes una siguiente pantalla, navega así:
-        // navigation.navigate("OtraPantalla", { erd: parseFloat(erd) });
         navigation.navigate("WrWl", {
             pdcl: parseFloat(pdcl),
             pdcr: parseFloat(pdcr),
@@ -25,20 +23,20 @@ const PDCScreen = ({ navigation, route}) => {
 
     return (
         <View style={styles.container}>
-            <Image source={require("../assets/PDC.png")} style={styles.image} />
 
-            <Text style={styles.title}>PDC -  Diámetro de taladrado del ala izquierda del buje</Text>
+            <Text style={styles.title}>PDC -  Diámetro de la brida del buje</Text>
+            <Image source={require("../assets/PDC.png")} style={styles.image} />
 
             <TextInput
                 style={styles.input}
-                placeholder="Ingresa el PDCL en mm"
+                placeholder="Ingresa el PDC L en mm"
                 keyboardType="numeric"
                 value={pdcl}
                 onChangeText={setPdcl}
             />
             <TextInput
                 style={styles.input}
-                placeholder="Ingresa el PDCR en mm"
+                placeholder="Ingresa el PDC R en mm"
                 keyboardType="numeric"
                 value={pdcr}
                 onChangeText={setPdcr}
@@ -51,16 +49,19 @@ const PDCScreen = ({ navigation, route}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         paddingHorizontal: 20,
+        paddingTop: 20,
         backgroundColor: '#fff',
     },
     title: {
         fontSize: 22,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 15,
         textAlign: 'center',
         color: '#333',
+        fontFamily: 'sans-serif-condensed',
+
     },
     input: {
         height: 50,
@@ -68,15 +69,18 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 10,
-        marginBottom: 20,
+        marginBottom: 10,
         fontSize: 16,
     },
     image: {
         width: 250,
         height: 250,
-        marginBottom: 40,
+        marginBottom: 20,
         resizeMode: 'contain',
-
+        alignSelf: 'center',
+    },
+    button: {
+        marginTop: 10,
     },
 });
 

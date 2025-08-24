@@ -9,14 +9,10 @@ const ERDScreen = ({ navigation,route }) => {
             Alert.alert("Valor no válido", "Por favor ingresa un número válido en milímetros.");
             return;
         }
-
-
         navigation.navigate("PDC", {
             erd: parseFloat(erd),
             agujeros: route.params.agujeros,
         });
-
-        console.log("ERD ingresado:", erd);
     };
 
     return (
@@ -35,12 +31,12 @@ const ERDScreen = ({ navigation,route }) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         paddingHorizontal: 20,
+        paddingTop: 40,
         backgroundColor: '#fff',
     },
     title: {
@@ -49,6 +45,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         textAlign: 'center',
         color: '#333',
+        fontFamily: 'sans-serif-condensed',
 
     },
     input: {
@@ -65,8 +62,7 @@ const styles = StyleSheet.create({
         height: 250,
         marginBottom: 40,
         resizeMode: 'contain',
-        justifyContent: 'center',
-
+        alignSelf: 'center',
     },
 });
 

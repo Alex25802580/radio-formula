@@ -24,9 +24,8 @@ const WrWlScreen = ({ navigation, route }) => {
 
         return (
         <View style={styles.container}>
+            <Text style={styles.title}>WRWL -  Distancia de la ala al centro del buje</Text>
             <Image source={require("../assets/PDC.png")} style={styles.image} />
-
-            <Text style={styles.title}>WRWL -  Distancia de la ala </Text>
 
             <TextInput
                 style={styles.input}
@@ -51,16 +50,19 @@ const WrWlScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         paddingHorizontal: 20,
+        paddingTop: 20,
         backgroundColor: '#fff',
     },
     title: {
         fontSize: 22,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 15,
         textAlign: 'center',
         color: '#333',
+        fontFamily: 'sans-serif-condensed',
+
     },
     input: {
         height: 50,
@@ -68,15 +70,18 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: 10,
-        marginBottom: 20,
+        marginBottom: 10,
         fontSize: 16,
     },
     image: {
         width: 250,
         height: 250,
-        marginBottom: 40,
+        marginBottom: 20,
         resizeMode: 'contain',
-
+        alignSelf: 'center',
+    },
+    button: {
+        marginTop: 10,
     },
 });
 
