@@ -1,0 +1,11 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Build artifacts
+.expo/
+/build
+
+# OS files
+.DS_Store
