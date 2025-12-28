@@ -1,14 +1,13 @@
 {
   "expo": {
-    "name": "radioformulafinalboss",
-    "slug": "radioformulafinalboss",
+    "name": "Calculadora de radios",
+    "slug": "calculadora-de-radios",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/SpokeyFondoBlanco.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/SpokeyFondoBlanco.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,13 +16,23 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/SpokeyFondoBlanco.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.alejandrocifuentes.calculadoraderadios",
+      "versionCode": 1
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/SpokeyFondoBlanco.png"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "44a70738-7483-44df-ae2e-a03e78b57636"
+      }
     }
   }
 }

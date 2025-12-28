@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, TextInput, Button, Alert, Image} from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    Alert,
+    Image,
+    TouchableOpacity,
+    Dimensions,
+} from 'react-native';
+
+const { width, height } = Dimensions.get('window');
 
 const WrWlScreen = ({ navigation, route }) => {
     const [wr, setWr] = useState('');
     const [wl, setWl] = useState('');
 
-
     const handleNext = () => {
-        if (!wr && !wl || isNaN(wr) || isNaN(wl)) {
-            Alert.alert("Valor no válido", "Por favor ingresa un número válido en milímetros.");
+        if (!wr || !wl || isNaN(wr) || isNaN(wl)) {
+            Alert.alert("Valor no válido", "Por favor ingresa números válidos para WL y WR en milímetros.");
             return;
         }
 
@@ -22,27 +32,33 @@ const WrWlScreen = ({ navigation, route }) => {
         });
     };
 
-        return (
+    return (
         <View style={styles.container}>
-            <Text style={styles.title}>WRWL -  Distancia de la ala al centro del buje</Text>
+            <Text style={styles.title}>WL/WR - Distancia de la ala al centro del buje</Text>
+
             <Image source={require("../assets/PDC.png")} style={styles.image} />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Ingresa el WL en mm"
-                keyboardType="numeric"
-                value={wl}
-                onChangeText={setWl}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Ingresa el WR en mm"
-                keyboardType="numeric"
-                value={wr}
-                onChangeText={setWr}
-            />
+            <View style={styles.inputsContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="WL - Lado no transmisión en mm"
+                    keyboardType="numeric"
+                    value={wl}
+                    onChangeText={setWl}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="WR - Lado transmisión en mm"
+                    placeholderTextColor="#666"
+                    keyboardType="numeric"
+                    value={wr}
+                    onChangeText={setWr}
+                />
+            </View>
 
-            <Button title="Siguiente" onPress={handleNext} />
+            <TouchableOpacity onPress={handleNext} style={styles.button}>
+                <Text style={styles.buttonText}>Siguiente</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -50,38 +66,52 @@ const WrWlScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
-        paddingHorizontal: 20,
-        paddingTop: 20,
         backgroundColor: '#fff',
+        paddingHorizontal: width * 0.05,
+        paddingTop: height * 0.05,
+        alignItems: 'center',
     },
     title: {
-        fontSize: 22,
+        fontSize: 28,
         fontWeight: 'bold',
-        marginBottom: 15,
         textAlign: 'center',
         color: '#333',
         fontFamily: 'sans-serif-condensed',
-
+        marginBottom: height * 0.03,
+    },
+    image: {
+        width: width * 0.8,
+        height: height * 0.3,
+        resizeMode: 'contain',
+        marginBottom: height * 0.03,
+    },
+    inputsContainer: {
+        width: '100%',
+        marginTop: -height * 0.07,
+        marginBottom: height * 0.03,
     },
     input: {
+        width: '100%',
         height: 50,
         borderColor: '#ccc',
         borderWidth: 1,
-        borderRadius: 8,
+        borderRadius: 10,
         paddingHorizontal: 10,
-        marginBottom: 10,
         fontSize: 16,
-    },
-    image: {
-        width: 250,
-        height: 250,
-        marginBottom: 20,
-        resizeMode: 'contain',
-        alignSelf: 'center',
+        marginBottom: height * 0.01,
     },
     button: {
-        marginTop: 10,
+        width: width * 0.93,
+        backgroundColor: '#007AFF',
+        paddingVertical: 14,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: -height * 0.01,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 20,
+        fontWeight: 'bold',
     },
 });
 
