@@ -4,31 +4,43 @@
     "slug": "calculadora-de-radios",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/SpokeyFondoBlanco.png",
+    "icon": "./assets/imagenAppFinal.png",
     "userInterfaceStyle": "light",
+
     "splash": {
-      "image": "./assets/SpokeyFondoBlanco.png",
+      "image": "./assets/ImagenAppReal.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+
+    "androidStatusBar": {
+      "visible": true,
+      "backgroundColor": "#ffffff",
+      "barStyle": "dark-content"
+    },
+
     "ios": {
       "supportsTablet": true
     },
+
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/SpokeyFondoBlanco.png",
+        "foregroundImage": "./assets/imagenAppFinal.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
+      "edgeToEdgeEnabled": false,
       "package": "com.alejandrocifuentes.calculadoraderadios",
       "versionCode": 1
     },
+
     "web": {
-      "favicon": "./assets/SpokeyFondoBlanco.png"
+      "favicon": "./assets/imagenAppFinal.png"
     },
+
     "assetBundlePatterns": [
       "**/*"
     ],
+
     "extra": {
       "eas": {
         "projectId": "44a70738-7483-44df-ae2e-a03e78b57636"

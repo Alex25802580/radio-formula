@@ -1,3 +1,4 @@
+// CrucesScreen.js
 import React, { useState } from 'react';
 import {
   View,
@@ -6,7 +7,9 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
+  StatusBar, // <- importamos StatusBar
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import RNPickerSelect from 'react-native-picker-select';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -16,18 +19,15 @@ const CrucesScreen = ({ navigation, route }) => {
   const [cruces, setCruces] = useState(null);
 
   const opciones = [
-    { label: '0 cruces (Radial)', value: 0 },
-    { label: '1 cruce', value: 1 },
-    { label: '2 cruces', value: 2 },
-    { label: '3 cruces', value: 3 },
+    { label: '0 crosses (Radial)', value: 0 },
+    { label: '1 cross', value: 1 },
+    { label: '2 crosses', value: 2 },
+    { label: '3 crosses', value: 3 },
   ];
 
   const handleNext = () => {
     if (cruces === null) {
-      Alert.alert(
-        'Selecciona un valor',
-        'Por favor, elige un número de cruces.'
-      );
+      Alert.alert('Select a value', 'Please choose a number of crosses.');
       return;
     }
 
@@ -39,63 +39,71 @@ const CrucesScreen = ({ navigation, route }) => {
       wr: route.params.wr,
       agujeros: route.params.agujeros,
       cruces,
+      offset: route.params.offset,
     });
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Selecciona el número de cruces</Text>
+    <SafeAreaView style={styles.safeArea}>
+      {/* StatusBar blanca con texto oscuro */}
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <RNPickerSelect
-        onValueChange={(value) => setCruces(value)}
-        items={opciones}
-        placeholder={{ label: 'Elige una opción...', value: null }}
-        value={cruces}
-        useNativeAndroidPickerStyle={false}
-        style={pickerSelectStyles}
-        Icon={() => (
-          <Ionicons name="chevron-down" size={24} color="#666" />
-        )}
-      />
+      <View style={styles.container}>
+        <Text style={styles.title}>Select number of crosses</Text>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleNext} style={styles.button}>
-          <Text style={styles.buttonText}>Siguiente</Text>
+        <RNPickerSelect
+          onValueChange={(value) => setCruces(value)}
+          items={opciones}
+          placeholder={{ label: 'Choose an option...', value: null }}
+          value={cruces}
+          useNativeAndroidPickerStyle={false}
+          style={pickerSelectStyles}
+          Icon={() => (
+            <View pointerEvents="none" style={pickerSelectStyles.iconContainer}>
+              <Ionicons name="chevron-down" size={24} color="#666" />
+            </View>
+          )}
+        />
+
+        <TouchableOpacity onPress={handleNext} style={styles.button} activeOpacity={0.85}>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FFFFFF', // <- fondo blanco
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: height * 0.08,
+    backgroundColor: '#FFFFFF', // <- fondo blanco
+    paddingTop: height * 0.04,
     paddingHorizontal: width * 0.05,
+    alignItems: 'center',
   },
   title: {
-    fontSize: 34,
+    fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: '#333',
-    fontFamily: 'sans-serif-condensed',
+    color: '#1C1C1E',
     textAlign: 'center',
-  },
-  buttonContainer: {
-    marginTop: height * 0.05,
-    alignItems: 'center',
+    fontFamily: 'sans-serif-condensed',
   },
   button: {
     width: width * 0.93,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#1100adff',
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: 'center',
-    marginVertical: 10,
+    marginTop: 20,
+    elevation: 5,
   },
   buttonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -111,12 +119,13 @@ const pickerSelectStyles = {
     borderColor: 'gray',
     borderRadius: 30,
     color: 'black',
-    paddingRight: 40, // espacio para la flecha
+    paddingRight: 40,
     marginBottom: 10,
+    backgroundColor: '#FFFFFF', // <- background blanco
   },
   iconContainer: {
-    top: 12,
-    right: 12,
+    top: 5,
+    right: 5,
   },
 };
 

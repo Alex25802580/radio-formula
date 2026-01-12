@@ -1,57 +1,86 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get("window");
 
-
-const IMAGE_SIZE = width * 0.55;            
-const TOP_PADDING = height * 0.17;         
-const BUTTON_WIDTH = width * 0.93;          
-const BUTTON_MARGIN_TOP = height * 0.09;  
+const TITLE_IMAGE_SIZE = width * 0.82;
+const APP_IMAGE_SIZE = width * 0.55;
+const TOP_PADDING = height * 0.08;
+const BUTTON_WIDTH = width * 0.9;
+const BUTTON_MARGIN_TOP = height * 0.05;
 
 const HomeScreen = ({ navigation }) => {
     return (
-        <View style={styles.container}>
-            <Image source={require("../assets/Spokey.png")} style={styles.image} />
+        <SafeAreaView style={styles.safeArea}>
+            {/* StatusBar gris con texto oscuro */}
+            <StatusBar barStyle="dark-content" backgroundColor="#FAFAFA" />
 
-            <Text style={styles.title}>Calculadora de radios</Text>
+            <View style={styles.container}>
 
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => navigation.navigate("Holes")} style={styles.button}>
-                    <Text style={styles.buttonText}>Calcular radios</Text>
-                </TouchableOpacity>
+                {/* Imagen Título */}
+                <Image 
+                     source={require("../assets/imagenTitulo (1).png")} 
+                    style={styles.titleImage} 
+                />
 
-                <TouchableOpacity onPress={() => navigation.navigate("SavedWheels")} style={[styles.button, styles.cameraButton]}>
-                    <Text style={styles.buttonText}>Ruedas guardadas</Text>
-                </TouchableOpacity>
+                {/* Imagen App */}
+                <Image 
+                     source={require("../assets/imagenAppFinal (1).png")} 
+                    style={styles.appImage} 
+                />
+
+                {/* Botones */}
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("Holes")}
+                        style={styles.button}
+                    >
+                        <Text style={styles.buttonText}>Calculate Spokes</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("SavedWheels")}
+                        style={[styles.button, styles.buttonSecondary]}
+                    >
+                        <Text style={styles.buttonText}>Saved Wheels</Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#FAFAFA',
+    },
+
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#FAFAFA',
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingTop: TOP_PADDING,
-        paddingHorizontal: width * 0.1, 
+        paddingHorizontal: width * 0.06,
     },
 
-    title: {
-        fontSize: 34,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 16,
-fontFamily: 'sans-serif-condensed'
-    },
-
-    image: {
-        width: IMAGE_SIZE,
-        height: IMAGE_SIZE,
-        marginBottom: 16,
+    titleImage: {
+        width: TITLE_IMAGE_SIZE,
+        height: TITLE_IMAGE_SIZE * 0.45,
         resizeMode: 'contain',
+        marginBottom: 13,
+        backgroundColor: '#FAFAFA',
+    },
+
+    appImage: {
+        width: APP_IMAGE_SIZE,
+        height: APP_IMAGE_SIZE,
+        resizeMode: 'contain',
+        marginBottom: 10,
+        backgroundColor: '#FAFAFA',
     },
 
     buttonContainer: {
@@ -62,17 +91,23 @@ fontFamily: 'sans-serif-condensed'
 
     button: {
         width: BUTTON_WIDTH,
-        backgroundColor: '#007AFF',
+        backgroundColor: '#1100adff',
         paddingVertical: 14,
-        borderRadius: 10,
+        borderRadius: 12,
         alignItems: 'center',
-        marginVertical: 10,
+        marginVertical: 8,
+        elevation: 5,
+    },
+
+    buttonSecondary: {
+        backgroundColor: '#8E8E93',
     },
 
     buttonText: {
         color: '#fff',
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
+        fontFamily: 'sans-serif-condensed',
     },
 });
 

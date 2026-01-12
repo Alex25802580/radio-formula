@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
+import {
+    View,
+    Text,
+    FlatList,
+    StyleSheet,
+    TouchableOpacity,
+    Alert,
+    Dimensions,
+    StatusBar, // <- importamos StatusBar
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get('window');
 
@@ -17,7 +27,7 @@ const SavedWheelsScreen = () => {
                     setRuedas(JSON.parse(data));
                 }
             } catch (error) {
-                console.log("Error al cargar ruedas", error);
+                console.log("Error loading wheels", error);
             }
         };
         cargarRuedas();
@@ -25,62 +35,101 @@ const SavedWheelsScreen = () => {
 
     const eliminarRueda = (id) => {
         Alert.alert(
-            "Eliminar rueda",
-            "¿Estás seguro de que deseas eliminar esta rueda?",
+            "Delete wheel",
+            "Are you sure you want to delete this wheel?",
             [
-                { text: "Cancelar", style: "cancel" },
+                { text: "Cancel", style: "cancel" },
                 {
-                    text: "Eliminar",
+                    text: "Delete",
                     style: "destructive",
                     onPress: async () => {
                         const nuevasRuedas = ruedas.filter(r => r.id !== id);
                         setRuedas(nuevasRuedas);
-                        await AsyncStorage.setItem("ruedas", JSON.stringify(nuevasRuedas));
+                        await AsyncStorage.setItem(
+                            "ruedas",
+                            JSON.stringify(nuevasRuedas)
+                        );
                     }
                 }
             ]
         );
     };
 
+    const renderItem = ({ item }) => {
+        const esSimetrica = item.radioIzquierdo === item.radioDerecho;
+
+        return (
+            <View style={styles.item}>
+                <View style={styles.itemInfo}>
+                    <Text style={styles.name}>Rim: {item.llanta}</Text>
+                    <Text style={styles.name}>Hub: {item.buje}</Text>
+
+                    {esSimetrica ? (
+                        <Text style={styles.radioText}>
+                            Spoke length: {item.radioIzquierdo} mm
+                        </Text>
+                    ) : (
+                        <>
+                            <Text style={styles.radioText}>
+                                Left spoke: {item.radioIzquierdo} mm
+                            </Text>
+                            <Text style={styles.radioText}>
+                                Right spoke (drive side): {item.radioDerecho} mm
+                            </Text>
+                        </>
+                    )}
+                </View>
+
+                <TouchableOpacity
+                    onPress={() => eliminarRueda(item.id)}
+                    style={styles.deleteButton}
+                >
+                    <Text style={styles.deleteText}>X</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Ruedas guardadas</Text>
+        <SafeAreaView style={styles.safeArea}>
+            {/* StatusBar blanca con texto oscuro */}
+            <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-            <TouchableOpacity
-                style={styles.homeButton}
-                onPress={() => navigation.navigate("Home")}
-            >
-                <Text style={styles.buttonText}>Volver al inicio</Text>
-            </TouchableOpacity>
+            <View style={styles.container}>
+                <Text style={styles.title}>Saved Wheels</Text>
 
-            <FlatList
-                data={ruedas}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <View style={styles.item}>
-                        <View style={styles.itemInfo}>
-                            <Text style={styles.name}>Llanta: {item.llanta}</Text>
-                            <Text style={styles.name}>Buje: {item.buje}</Text>
-                            <Text style={styles.radioText}>Radio izquierdo: {item.radioIzquierdo} mm</Text>
-                            <Text style={styles.radioText}>Radio derecho: {item.radioDerecho} mm</Text>
-                        </View>
-                        <TouchableOpacity onPress={() => eliminarRueda(item.id)} style={styles.deleteButton}>
-                            <Text style={styles.deleteText}>X</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
-                ListEmptyComponent={<Text style={styles.emptyText}>No hay ruedas guardadas todavía</Text>}
-            />
-        </View>
+                <TouchableOpacity
+                    style={styles.homeButton}
+                    onPress={() => navigation.navigate("Home")}
+                >
+                    <Text style={styles.buttonText}>Back to Home</Text>
+                </TouchableOpacity>
+
+                <FlatList
+                    data={ruedas}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
+                    contentContainerStyle={{ paddingBottom: height * 0.05 }}
+                    ListEmptyComponent={
+                        <Text style={styles.emptyText}>
+                            No wheels saved yet
+                        </Text>
+                    }
+                />
+            </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: "#FFFFFF", // fondo blanco
+    },
     container: {
         flex: 1,
         paddingHorizontal: width * 0.05,
-        paddingTop: height * 0.05,
-        backgroundColor: "#fff",
+        paddingTop: height * 0.02,
     },
     title: {
         fontSize: 28,
@@ -88,15 +137,16 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         fontFamily: 'sans-serif-condensed',
         textAlign: 'center',
-        color: '#333',
+        color: '#1C1C1E',
     },
     homeButton: {
         width: width * 0.93,
-        backgroundColor: '#007AFF',
+        backgroundColor: '#1100adff',
         paddingVertical: 14,
-        borderRadius: 10,
+        borderRadius: 14,
         alignItems: 'center',
         marginBottom: 25,
+        elevation: 5,
     },
     buttonText: {
         color: '#fff',
@@ -110,8 +160,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 12,
         marginBottom: 10,
-        borderRadius: 8,
-        backgroundColor: "#f1f1f1"
+        borderRadius: 12,
+        backgroundColor: "#FFFFFF",
+        borderWidth: 1,
+        borderColor: "#D1D1D6",
     },
     itemInfo: {
         flex: 1,
@@ -125,7 +177,7 @@ const styles = StyleSheet.create({
         fontFamily: 'sans-serif-condensed',
     },
     radioText: {
-        fontSize: 16,
+        fontSize: 14,
         color: "#555",
         marginBottom: 2,
         fontFamily: 'sans-serif-condensed',

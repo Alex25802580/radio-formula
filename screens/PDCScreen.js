@@ -1,129 +1,187 @@
 import React, { useState } from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
-    TextInput,
-    Alert,
-    Image,
-    TouchableOpacity,
-    Dimensions,
-    KeyboardAvoidingView,
-    Platform,
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  Keyboard,
+  TouchableWithoutFeedback,
+  StatusBar, // <- importamos StatusBar
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const { width, height } = Dimensions.get('window');
 
 const PDCScreen = ({ navigation, route }) => {
-    const [pdcl, setPdcl] = useState('');
-    const [pdcr, setPdcr] = useState('');
+  const [pdcl, setPdcl] = useState('');
+  const [pdcr, setPdcr] = useState('');
 
-    const { erd, agujeros } = route.params;
+  const { erd, agujeros, offset } = route.params || {};
 
-    const handleNext = () => {
-        if ((!pdcl && !pdcr) || isNaN(pdcl) || isNaN(pdcr)) {
-            Alert.alert(
-                "Valor no válido",
-                "Por favor ingresa un número válido en milímetros."
-            );
-            return;
-        }
+  const handleNext = () => {
+    if (!pdcl || !pdcr || isNaN(Number(pdcl)) || isNaN(Number(pdcr))) {
+      Alert.alert(
+        "Invalid value",
+        "Please enter a valid number in millimeters for both sides."
+      );
+      return;
+    }
 
-        navigation.navigate("WrWl", {
-            pdcl: parseFloat(pdcl),
-            pdcr: parseFloat(pdcr),
-            erd,
-            agujeros,
-        });
-    };
+    Keyboard.dismiss();
+    setTimeout(() => {
+      navigation.navigate("WrWl", {
+        pdcl: parseFloat(pdcl),
+        pdcr: parseFloat(pdcr),
+        erd,
+        agujeros,
+        offset,
+      });
+    }, 50);
+  };
 
-    return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-            <View style={styles.container}>
-                <Text style={styles.title}>PCD L/R - Diámetro de la brida del buje</Text>
+  return (
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: '#FFFFFF' }} // <- fondo blanco
+      contentContainerStyle={styles.scrollContainer}
+      keyboardShouldPersistTaps="handled"
+      enableOnAndroid
+      extraScrollHeight={130}
+    >
+      {/* StatusBar blanca con texto oscuro */}
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-                <Image source={require("../assets/PDC.png")} style={styles.image} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Text style={styles.title}>PCD</Text>
 
-                <View style={styles.inputsContainer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="PCD L - Lado no transmisión en mm"
-                        placeholderTextColor="#666"
-                        keyboardType="numeric"
-                        value={pdcl}
-                        onChangeText={setPdcl}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="PCD R - Lado transmisión en mm"
-                        placeholderTextColor="#666"
-                        keyboardType="numeric"
-                        value={pdcr}
-                        onChangeText={setPdcr}
-                    />
-                </View>
+          <Text style={styles.subtitle}>
+            Pitch Circle Diameter
+          </Text>
 
-                <TouchableOpacity onPress={handleNext} style={styles.button}>
-                    <Text style={styles.buttonText}>Siguiente</Text>
-                </TouchableOpacity>
-            </View>
-        </KeyboardAvoidingView>
-    );
+          <View style={styles.imageCard}>
+            <Image
+              source={require("../assets/PDC.png")}
+              style={styles.image}
+            />
+          </View>
+
+          <View style={styles.inputsContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="PCD Left – Non-drive side (mm)"
+              placeholderTextColor="#8E8E93"
+              keyboardType="numeric"
+              value={pdcl}
+              onChangeText={setPdcl}
+              returnKeyType="next"
+            />
+
+            <TextInput
+              style={styles.input}
+              placeholder="PCD Right – Drive side (mm)"
+              placeholderTextColor="#8E8E93"
+              keyboardType="numeric"
+              value={pdcr}
+              onChangeText={setPdcr}
+              returnKeyType="done"
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={handleNext}
+            style={styles.button}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAwareScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        paddingHorizontal: width * 0.05,
-        paddingTop: height * 0.05,
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#333',
-        fontFamily: 'sans-serif-condensed',
-        marginBottom: height * 0.03,
-    },
-    image: {
-        width: width * 0.8,
-        height: height * 0.3,
-        resizeMode: 'contain',
-        marginBottom: height * 0.03,
-    },
-    inputsContainer: {
-        width: '100%',
-        marginTop: -height * 0.07,
-        marginBottom: height * 0.03,
-    },
-    input: {
-        width: '100%',
-        height: 50,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        fontSize: 16,
-        marginBottom: height * 0.01,
-    },
-    button: {
-        width: width * 0.93,
-        backgroundColor: '#007AFF',
-        paddingVertical: 14,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginTop: -height * 0.01,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingTop: height * 0.04,
+    paddingBottom: height * 0.06,
+  },
+
+  container: {
+    width: '100%',
+    alignItems: 'center',
+    paddingHorizontal: width * 0.06,
+  },
+
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#1C1C1E',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+
+  subtitle: {
+    fontSize: 17,
+    color: '#6C6C70',
+    textAlign: 'center',
+    marginBottom: 18,
+  },
+
+  imageCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF', // <- fondo blanco
+    borderRadius: 22,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    marginBottom: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+  },
+
+  image: {
+    width: width * 0.85,
+    height: height * 0.21,
+    resizeMode: 'contain',
+  },
+
+  inputsContainer: {
+    width: '100%',
+    marginBottom: 16,
+  },
+
+  input: {
+    width: '100%',
+    height: 56,
+    borderRadius: 14,
+    paddingHorizontal: 18,
+    fontSize: 17,
+    backgroundColor: '#FFFFFF', // <- fondo blanco
+    borderWidth: 1,
+    borderColor: '#D1D1D6',
+    color: '#000',
+    marginBottom: 12,
+  },
+
+  button: {
+    width: '100%',
+    backgroundColor: '#1100adff',
+    paddingVertical: 18,
+    borderRadius: 14,
+    alignItems: 'center',
+    elevation: 5,
+  },
+
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 19,
+    fontWeight: '700',
+  },
 });
 
 export default PDCScreen;

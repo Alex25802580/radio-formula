@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { 
-    View, 
-    Text, 
-    StyleSheet, 
-    TextInput, 
-    TouchableOpacity, 
-    Modal, 
-    Dimensions 
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    Modal,
+    Dimensions,
+    StatusBar, // <- importamos StatusBar
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
 const ResultadoScreen = ({ route, navigation }) => {
-    const { erd, pdcl, pdcr, wl, wr, cruces, agujeros } = route.params;
+    const { erd, pdcl, pdcr, wl, wr, cruces, agujeros, offset } = route.params;
 
     const [modalVisible, setModalVisible] = useState(false);
     const [llanta, setLlanta] = useState('');
@@ -21,22 +22,34 @@ const ResultadoScreen = ({ route, navigation }) => {
 
     const calcularLongitudRadio = ({ erd, pcd, flangeOffset, cruces, agujeros }) => {
         const alpha = (2 * Math.PI * cruces) / (agujeros / 2);
-
         const L = Math.sqrt(
             Math.pow(erd / 2, 2) +
             Math.pow(pcd / 2, 2) -
             2 * (erd / 2) * (pcd / 2) * Math.cos(alpha) +
             Math.pow(flangeOffset, 2)
         );
-
-        // Se usa toFixed(1) para comparar los valores como cadenas también, asegurando consistencia
-        return L.toFixed(1); 
+        return L.toFixed(1);
     };
 
-    const radioIzquierdo = calcularLongitudRadio({ erd, pcd: pdcl, flangeOffset: wl, cruces, agujeros });
-    const radioDerecho = calcularLongitudRadio({ erd, pcd: pdcr, flangeOffset: wr, cruces, agujeros });
-    
-    // Nueva lógica para determinar si el buje es simétrico y los radios son iguales
+    const wlAjustado = wl + offset;
+    const wrAjustado = wr - offset;
+
+    const radioIzquierdo = calcularLongitudRadio({
+        erd,
+        pcd: pdcl,
+        flangeOffset: wlAjustado,
+        cruces,
+        agujeros,
+    });
+
+    const radioDerecho = calcularLongitudRadio({
+        erd,
+        pcd: pdcr,
+        flangeOffset: wrAjustado,
+        cruces,
+        agujeros,
+    });
+
     const esSimetrico = radioIzquierdo === radioDerecho;
 
     const guardarRueda = async () => {
@@ -54,7 +67,7 @@ const ResultadoScreen = ({ route, navigation }) => {
             ruedas.push(nuevaRueda);
             await AsyncStorage.setItem('ruedas', JSON.stringify(ruedas));
         } catch (error) {
-            console.log('Error al guardar rueda', error);
+            console.log('Error saving wheel', error);
         }
 
         setModalVisible(false);
@@ -63,56 +76,77 @@ const ResultadoScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Resultado</Text>
-            
-            {/* Lógica condicional para mostrar el resultado */}
+            {/* StatusBar blanca con texto oscuro */}
+            <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+
+            <Text style={styles.title}>Result</Text>
+
             {esSimetrico ? (
-                <Text style={styles.result}>Radio: {radioIzquierdo} mm</Text>
+                <Text style={styles.result}>
+                    Spoke length: {radioIzquierdo} mm
+                </Text>
             ) : (
                 <>
-                    <Text style={styles.result}>Radio izquierdo: {radioIzquierdo} mm</Text>
-                    <Text style={styles.result}>Radio derecho: (Lado transmisión) {radioDerecho} mm</Text>
+                    <Text style={styles.result}>
+                        Left spoke: {radioIzquierdo} mm
+                    </Text>
+                    <Text style={styles.result}>
+                        Right spoke (drive side): {radioDerecho} mm
+                    </Text>
                 </>
             )}
-            
+
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.popToTop()}>
-                    <Text style={styles.buttonText}>Volver al inicio</Text>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => setModalVisible(true)}
+                >
+                    <Text style={styles.buttonText}>Save wheel</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-                    <Text style={styles.buttonText}>Guardar rueda</Text>
+                <TouchableOpacity
+                    style={[styles.button, styles.buttonSecondary]}
+                    onPress={() => navigation.popToTop()}
+                >
+                    <Text style={styles.buttonText}>Back to home</Text>
                 </TouchableOpacity>
             </View>
 
             <Modal visible={modalVisible} animationType="slide" transparent>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Guardar rueda</Text>
+                        <Text style={styles.modalTitle}>Save wheel</Text>
 
-                        <Text style={styles.modalLabel}>Nombre de la llanta:</Text>
+                        <Text style={styles.modalLabel}>Rim name:</Text>
                         <TextInput
                             value={llanta}
                             onChangeText={setLlanta}
                             style={styles.modalInput}
+                            placeholder="Enter rim name"
+                            placeholderTextColor="#8E8E93"
                         />
 
-                        <Text style={styles.modalLabel}>Nombre del buje:</Text>
+                        <Text style={styles.modalLabel}>Hub name:</Text>
                         <TextInput
                             value={buje}
                             onChangeText={setBuje}
                             style={styles.modalInput}
+                            placeholder="Enter hub name"
+                            placeholderTextColor="#8E8E93"
                         />
 
-                        <TouchableOpacity style={styles.modalButton} onPress={guardarRueda}>
-                            <Text style={styles.buttonText}>Guardar rueda</Text>
+                        <TouchableOpacity
+                            style={styles.modalButton}
+                            onPress={guardarRueda}
+                        >
+                            <Text style={styles.buttonText}>Save wheel</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={[styles.modalButton, { backgroundColor: '#888' }]}
+                            style={[styles.modalButton, styles.buttonSecondary]}
                             onPress={() => setModalVisible(false)}
                         >
-                            <Text style={styles.buttonText}>Cancelar</Text>
+                            <Text style={styles.buttonText}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -121,93 +155,109 @@ const ResultadoScreen = ({ route, navigation }) => {
     );
 };
 
-// ... estilos sin cambios
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: width * 0.05,
         paddingTop: height * 0.05,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFFFF', // <- fondo blanco
         alignItems: 'center',
     },
+
     title: {
-        fontSize: 28,
+        fontSize: 34,
         fontWeight: 'bold',
         marginBottom: height * 0.03,
         textAlign: 'center',
-        color: '#333',
+        color: '#1C1C1E',
         fontFamily: 'sans-serif-condensed',
     },
+
     result: {
-        fontSize: 19,
+        fontSize: 20,
         marginBottom: height * 0.015,
         textAlign: 'center',
         fontFamily: 'sans-serif-condensed',
-        color: '#007AFF',
+        color: '#1C1C1E', 
     },
+
     buttonContainer: {
         marginTop: height * 0.03,
         width: '100%',
         alignItems: 'center',
     },
+
     button: {
         width: width * 0.93,
-        backgroundColor: '#007AFF',
+        backgroundColor: '#1100adff',
         paddingVertical: 14,
-        borderRadius: 10,
+        borderRadius: 12,
         alignItems: 'center',
         marginVertical: height * 0.01,
+        elevation: 5,
     },
+
+    buttonSecondary: {
+        backgroundColor: '#8E8E93',
+    },
+
     buttonText: {
-        color: '#fff',
+        color: '#FFFFFF',
         fontSize: 20,
         fontWeight: 'bold',
         fontFamily: 'sans-serif-condensed',
     },
+
     modalOverlay: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.4)',
     },
+
     modalContent: {
         width: '90%',
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFFFF', // <- fondo blanco
         borderRadius: 15,
         padding: 20,
         alignItems: 'center',
     },
+
     modalTitle: {
         fontSize: 22,
         fontWeight: 'bold',
         marginBottom: 20,
-        color: '#333',
+        color: '#1C1C1E',
         fontFamily: 'sans-serif-condensed',
     },
+
     modalLabel: {
         fontSize: 16,
         marginBottom: 5,
         fontFamily: 'sans-serif-condensed',
-        color: '#333',
+        color: '#1C1C1E',
         alignSelf: 'flex-start',
     },
+
     modalInput: {
         width: '100%',
         height: 50,
-        borderColor: '#ccc',
+        borderColor: '#D1D1D6',
         borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        fontSize: 16,
+        borderRadius: 14,
+        paddingHorizontal: 18,
+        fontSize: 17,
         marginBottom: 15,
         fontFamily: 'sans-serif-condensed',
+        backgroundColor: '#FFFFFF', // <- fondo blanco
+        color: '#000',
     },
+
     modalButton: {
         width: '100%',
-        backgroundColor: '#007AFF',
+        backgroundColor: '#1100adff',
         paddingVertical: 14,
-        borderRadius: 10,
+        borderRadius: 12,
         alignItems: 'center',
         marginVertical: 5,
     },

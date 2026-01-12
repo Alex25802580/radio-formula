@@ -1,94 +1,172 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Alert, Image, TouchableOpacity, Keyboard, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  Keyboard,
+  TouchableWithoutFeedback,
+  StatusBar, // <- importamos StatusBar
+} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const { width, height } = Dimensions.get('window');
 
 const ERDScreen = ({ navigation, route }) => {
-    const [erd, setErd] = useState('');
+  const [erd, setErd] = useState('');
 
-    const handleNext = () => {
-        if (!erd || isNaN(erd)) {
-            Alert.alert("Valor no válido", "Por favor ingresa un número válido en milímetros.");
-            return;
-        }
-        navigation.navigate("PDC", {
-            erd: parseFloat(erd),
-            agujeros: route.params.agujeros,
-        });
-    };
+  const handleNext = () => {
+    if (!erd || isNaN(Number(erd))) {
+      Alert.alert(
+        "Invalid value",
+        "Please enter a valid number in millimeters."
+      );
+      return;
+    }
 
-    return (
+    Keyboard.dismiss();
+
+    setTimeout(() => {
+      navigation.navigate("Offset", {
+        erd: parseFloat(erd),
+        agujeros: route.params?.agujeros,
+      });
+    }, 0);
+  };
+
+  return (
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: '#FFFFFF' }} // <- fondo blanco
+      contentContainerStyle={styles.scrollContainer}
+      keyboardShouldPersistTaps="handled"
+      enableOnAndroid
+      extraScrollHeight={60}
+      keyboardOpeningTime={0}
+    >
+      {/* StatusBar blanca con texto oscuro */}
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-            <Text style={styles.title}>ERD - Diámetro efectivo de la llanta</Text>
+          <Text style={styles.title}>ERD</Text>
 
-            <Image source={require("../assets/what-is-erd.png")} style={styles.image} />
+          <Text style={styles.subtitle}>
+            Effective Rim Diameter
+          </Text>
 
+          <View style={styles.imageCard}>
+            <Image
+              source={require("../assets/what-is-erd.png")}
+              style={styles.image}
+            />
+          </View>
+
+          <View style={styles.inputsContainer}>
             <TextInput
-                style={styles.input}
-                placeholder="Ingresa el ERD en mm"
-                placeholderTextColor="#666"
-                keyboardType="numeric"
-                maxLength={3}
-                value={erd}
-                onChangeText={(text) => {
-                    setErd(text);
-                    if (text.length === 3) Keyboard.dismiss();
-                }}
-                />
+              style={styles.input}
+              placeholder="Enter ERD in mm"
+              placeholderTextColor="#8E8E93"
+              keyboardType="numeric"
+              value={erd}
+              onChangeText={setErd}
+              returnKeyType="done"
+            />
+          </View>
 
-
-            <TouchableOpacity onPress={handleNext} style={styles.button}>
-                <Text style={styles.buttonText}>Siguiente</Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleNext}
+            style={styles.button}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
         </View>
-    );
+      </TouchableWithoutFeedback>
+    </KeyboardAwareScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        paddingHorizontal: width * 0.05,
-        paddingTop: height * 0.05,
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 34,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#333',
-        fontFamily: 'sans-serif-condensed',
-        marginBottom: height * 0.03,
-    },
-    image: {
-        width: width * 0.8,
-        height: height * 0.3,
-        resizeMode: 'contain',
-        marginBottom: height * 0.03,
-    },
-    input: {
-        width: '100%',
-        height: 50,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        fontSize: 16,
-        marginBottom: height * 0.03,
-        marginTop: -height * 0.03,
-    },
-    button: {
-        width: width * 0.93,
-        backgroundColor: '#007AFF',
-        paddingVertical: 14,
-        borderRadius: 10,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingTop: height * 0.04,
+    paddingBottom: height * 0.06,
+  },
+
+  container: {
+    width: '100%',
+    alignItems: 'center',
+    paddingHorizontal: width * 0.06,
+  },
+
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#1C1C1E',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+
+  subtitle: {
+    fontSize: 17,
+    color: '#6C6C70',
+    textAlign: 'center',
+    marginBottom: 18,
+  },
+
+  imageCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF', // <- fondo blanco
+    borderRadius: 22,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    marginBottom: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+  },
+
+  image: {
+    width: width * 0.85,
+    height: height * 0.21,
+    resizeMode: 'contain',
+  },
+
+  inputsContainer: {
+    width: '100%',
+    marginBottom: 16,
+  },
+
+  input: {
+    width: '100%',
+    height: 56,
+    borderRadius: 14,
+    paddingHorizontal: 18,
+    fontSize: 17,
+    backgroundColor: '#FFFFFF', // <- fondo blanco
+    borderWidth: 1,
+    borderColor: '#D1D1D6',
+    color: '#000',
+  },
+
+  button: {
+    width: '100%',
+    backgroundColor: '#1100adff',
+    paddingVertical: 18,
+    borderRadius: 14,
+    alignItems: 'center',
+    elevation: 5,
+  },
+
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 19,
+    fontWeight: '700',
+  },
 });
 
 export default ERDScreen;

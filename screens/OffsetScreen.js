@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
+import {
   View,
   Text,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   Alert,
   Image,
+  TouchableOpacity,
   Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
@@ -16,57 +16,50 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 const { width, height } = Dimensions.get('window');
 
-const WrWlScreen = ({ navigation, route }) => {
-  const [wr, setWr] = useState('');
-  const [wl, setWl] = useState('');
-
-  const { pdcl, pdcr, erd, agujeros, offset } = route.params || {};
+const OffsetScreen = ({ navigation, route }) => {
+  const [offset, setOffset] = useState('');
 
   const handleNext = () => {
-    if (!wr || !wl || isNaN(Number(wr)) || isNaN(Number(wl))) {
+    if (offset === '' || isNaN(Number(offset))) {
       Alert.alert(
         "Invalid value",
-        "Please enter valid numbers in millimeters for WL and WR."
+        "Please enter a valid number in millimeters."
       );
       return;
     }
 
     Keyboard.dismiss();
     setTimeout(() => {
-      navigation.navigate("Cruces", {
-        wr: parseFloat(wr),
-        wl: parseFloat(wl),
-        pdcl,
-        pdcr,
-        erd,
-        agujeros,
-        offset,
+      navigation.navigate("PDC", {
+        erd: route.params?.erd,
+        agujeros: route.params?.agujeros,
+        offset: parseFloat(offset),
       });
     }, 50);
   };
 
   return (
     <KeyboardAwareScrollView
-      style={{ backgroundColor: '#FFFFFF' }} // fondo blanco
+      style={{ backgroundColor: '#FFFFFF' }} // <- fondo blanco
       contentContainerStyle={styles.scrollContainer}
       keyboardShouldPersistTaps="handled"
       enableOnAndroid
-      extraScrollHeight={130}
+      extraScrollHeight={60}
     >
       {/* StatusBar blanca con texto oscuro */}
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <Text style={styles.title}>WL / WR</Text>
+          <Text style={styles.title}>Rim Offset</Text>
 
           <Text style={styles.subtitle}>
-            Hub center distance
+            Enter 0 mm if the rim is symmetric
           </Text>
 
           <View style={styles.imageCard}>
             <Image
-              source={require("../assets/PDC.png")}
+              source={require("../assets/imagenOffset.png")}
               style={styles.image}
             />
           </View>
@@ -74,21 +67,11 @@ const WrWlScreen = ({ navigation, route }) => {
           <View style={styles.inputsContainer}>
             <TextInput
               style={styles.input}
-              placeholder="WL – Non-drive side (mm)"
+              placeholder="Enter offset in mm"
               placeholderTextColor="#8E8E93"
               keyboardType="numeric"
-              value={wl}
-              onChangeText={setWl}
-              returnKeyType="next"
-            />
-
-            <TextInput
-              style={styles.input}
-              placeholder="WR – Drive side (mm)"
-              placeholderTextColor="#8E8E93"
-              keyboardType="numeric"
-              value={wr}
-              onChangeText={setWr}
+              value={offset}
+              onChangeText={setOffset}
               returnKeyType="done"
             />
           </View>
@@ -124,7 +107,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1C1C1E',
     textAlign: 'center',
-    marginBottom: 4,
+    marginBottom: 6,
   },
 
   subtitle: {
@@ -136,7 +119,7 @@ const styles = StyleSheet.create({
 
   imageCard: {
     width: '100%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFFFFF', // <- fondo blanco
     borderRadius: 22,
     paddingVertical: 20,
     paddingHorizontal: 16,
@@ -163,11 +146,10 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingHorizontal: 18,
     fontSize: 17,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFFFFF', // <- fondo blanco
     borderWidth: 1,
     borderColor: '#D1D1D6',
     color: '#000',
-    marginBottom: 12,
   },
 
   button: {
@@ -186,4 +168,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WrWlScreen;
+export default OffsetScreen;
