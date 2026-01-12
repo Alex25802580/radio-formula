@@ -4,11 +4,11 @@
     "slug": "calculadora-de-radios",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/imagenAppFinal.png",
+    "icon": "./assets/logo (1) (1).png",
     "userInterfaceStyle": "light",
 
     "splash": {
-      "image": "./assets/ImagenAppReal.png",
+      "image": "./assets/logoo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -25,7 +25,7 @@
 
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/imagenAppFinal.png",
+        "foregroundImage": "./assets/logo (1) (1).png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": false,
@@ -34,7 +34,7 @@
     },
 
     "web": {
-      "favicon": "./assets/imagenAppFinal.png"
+      "favicon": "./assets/logo (1) (1).png"
     },
 
     "assetBundlePatterns": [

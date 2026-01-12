@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get("window");
 
-const TITLE_IMAGE_SIZE = width * 0.82;
+const TITLE_IMAGE_SIZE = width * 1.05;
 const APP_IMAGE_SIZE = width * 0.55;
-const TOP_PADDING = height * 0.08;
+const TOP_PADDING = height * 0.07;
 const BUTTON_WIDTH = width * 0.9;
-const BUTTON_MARGIN_TOP = height * 0.05;
+const BUTTON_MARGIN_TOP = height * 0.06;
 
 const HomeScreen = ({ navigation }) => {
     return (
@@ -18,33 +18,38 @@ const HomeScreen = ({ navigation }) => {
 
             <View style={styles.container}>
 
-                {/* Imagen Título */}
+                {/* Imagen Título (NO se mueve) */}
                 <Image 
-                     source={require("../assets/imagenTitulo (1).png")} 
+                    source={require("../assets/letras.png")} 
                     style={styles.titleImage} 
                 />
 
-                {/* Imagen App */}
-                <Image 
-                     source={require("../assets/imagenAppFinal (1).png")} 
-                    style={styles.appImage} 
-                />
+                {/* Todo lo demás sube ligeramente */}
+                <View style={styles.contentBelowTitle}>
 
-                {/* Botones */}
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("Holes")}
-                        style={styles.button}
-                    >
-                        <Text style={styles.buttonText}>Calculate Spokes</Text>
-                    </TouchableOpacity>
+                    {/* Imagen App */}
+                    <Image 
+                        source={require("../assets/logoo.png")} 
+                        style={styles.appImage} 
+                    />
 
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("SavedWheels")}
-                        style={[styles.button, styles.buttonSecondary]}
-                    >
-                        <Text style={styles.buttonText}>Saved Wheels</Text>
-                    </TouchableOpacity>
+                    {/* Botones */}
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("Holes")}
+                            style={styles.button}
+                        >
+                            <Text style={styles.buttonText}>Calculate Spokes</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("SavedWheels")}
+                            style={[styles.button, styles.buttonSecondary]}
+                        >
+                            <Text style={styles.buttonText}>Saved Wheels</Text>
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
 
             </View>
@@ -64,22 +69,29 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         paddingTop: TOP_PADDING,
-        paddingHorizontal: width * 0.06,
+        paddingHorizontal: width * 0.07,
     },
 
-    titleImage: {
-        width: TITLE_IMAGE_SIZE,
-        height: TITLE_IMAGE_SIZE * 0.45,
-        resizeMode: 'contain',
-        marginBottom: 13,
-        backgroundColor: '#FAFAFA',
+   titleImage: {
+    width: TITLE_IMAGE_SIZE,
+    height: TITLE_IMAGE_SIZE * 0.55,
+    resizeMode: 'contain',
+    marginBottom:-5,
+    backgroundColor: '#FAFAFA',
+    transform: [{ translateX: 7 }], // ← AJUSTA ESTE VALOR
+},
+
+    contentBelowTitle: {
+        marginTop: -40, 
+        width: '100%',
+        alignItems: 'center',
     },
 
     appImage: {
         width: APP_IMAGE_SIZE,
         height: APP_IMAGE_SIZE,
         resizeMode: 'contain',
-        marginBottom: 10,
+        marginBottom: -5,
         backgroundColor: '#FAFAFA',
     },
 
@@ -105,7 +117,7 @@ const styles = StyleSheet.create({
 
     buttonText: {
         color: '#fff',
-        fontSize: 18,
+        fontSize: 19,
         fontWeight: 'bold',
         fontFamily: 'sans-serif-condensed',
     },

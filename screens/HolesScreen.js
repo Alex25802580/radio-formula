@@ -57,7 +57,7 @@ const HolesScreen = ({ navigation }) => {
           )}
         />
 
-        <TouchableOpacity onPress={handleNext} style={styles.button} activeOpacity={0.85}>
+        <TouchableOpacity onPress={handleNext} style={styles.button} activeOpacity={0.15}>
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
       </View>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: 'bold',
   },
 });
@@ -113,7 +113,7 @@ const pickerSelectStyles = {
     color: 'black',
     paddingRight: 40,
     marginBottom: 10,
-    backgroundColor: '#FFFFFF', // <- fondo blanco
+    backgroundColor: '#FFFFFF', 
   },
   iconContainer: {
     top: 5,

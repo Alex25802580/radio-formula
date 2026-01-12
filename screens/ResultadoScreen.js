@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 34,
+        fontSize: 32,
         fontWeight: 'bold',
         marginBottom: height * 0.03,
         textAlign: 'center',
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
 
     buttonText: {
         color: '#FFFFFF',
-        fontSize: 20,
+        fontSize: 19,
         fontWeight: 'bold',
         fontFamily: 'sans-serif-condensed',
     },

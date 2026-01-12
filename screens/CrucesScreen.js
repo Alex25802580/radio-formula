@@ -65,7 +65,7 @@ const CrucesScreen = ({ navigation, route }) => {
           )}
         />
 
-        <TouchableOpacity onPress={handleNext} style={styles.button} activeOpacity={0.85}>
+        <TouchableOpacity onPress={handleNext} style={styles.button} activeOpacity={0.15}>
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
       </View>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: 'bold',
   },
 });
