@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Calculadora de radios",
+    "name": "Spoke Calculator",
     "slug": "calculadora-de-radios",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo (1) (1).png",
+    "icon": "./assets/imagen6.png",
     "userInterfaceStyle": "light",
 
     "splash": {
@@ -25,7 +25,7 @@
 
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo (1) (1).png",
+        "foregroundImage": "./assets/imagen6.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": false,
