@@ -10,7 +10,7 @@ import {
   Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
-  StatusBar, // <- importamos StatusBar
+  StatusBar,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -47,13 +47,15 @@ const WrWlScreen = ({ navigation, route }) => {
 
   return (
     <KeyboardAwareScrollView
-      style={{ backgroundColor: '#FFFFFF' }} // fondo blanco
+      style={{ backgroundColor: '#FFFFFF' }}
       contentContainerStyle={styles.scrollContainer}
       keyboardShouldPersistTaps="handled"
-      enableOnAndroid
-      extraScrollHeight={130}
+      enableOnAndroid={true}
+      extraScrollHeight={140}
+      enableAutomaticScroll={true}
+      keyboardOpeningTime={0}
+      viewIsInsideTabBar={true}
     >
-      {/* StatusBar blanca con texto oscuro */}
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -71,6 +73,7 @@ const WrWlScreen = ({ navigation, route }) => {
             />
           </View>
 
+          {/* Botón NEXT subido aquí, dentro del contenedor de inputs */}
           <View style={styles.inputsContainer}>
             <TextInput
               style={styles.input}
@@ -91,15 +94,17 @@ const WrWlScreen = ({ navigation, route }) => {
               onChangeText={setWr}
               returnKeyType="done"
             />
+
+            <TouchableOpacity
+              onPress={handleNext}
+              style={styles.button}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.buttonText}>Next</Text>
+            </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
-            onPress={handleNext}
-            style={styles.button}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
+          <View style={{ height: 40 }} />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAwareScrollView>
@@ -110,7 +115,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingTop: height * 0.04,
-    paddingBottom: height * 0.06,
+    paddingBottom: height * 0.05,
   },
 
   container: {
@@ -140,10 +145,14 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     paddingVertical: 20,
     paddingHorizontal: 16,
-    marginBottom: 26,
+    marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
 
   image: {
@@ -154,7 +163,6 @@ const styles = StyleSheet.create({
 
   inputsContainer: {
     width: '100%',
-    marginBottom: 16,
   },
 
   input: {
@@ -177,6 +185,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     elevation: 5,
+    marginTop: 4, // Pegado al último input
   },
 
   buttonText: {

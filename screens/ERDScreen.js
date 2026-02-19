@@ -10,7 +10,7 @@ import {
   Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
-  StatusBar, // <- importamos StatusBar
+  StatusBar,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -40,14 +40,14 @@ const ERDScreen = ({ navigation, route }) => {
 
   return (
     <KeyboardAwareScrollView
-      style={{ backgroundColor: '#FFFFFF' }} // <- fondo blanco
+      style={{ backgroundColor: '#FFFFFF' }}
       contentContainerStyle={styles.scrollContainer}
       keyboardShouldPersistTaps="handled"
-      enableOnAndroid
-      extraScrollHeight={60}
+      enableOnAndroid={true}
+      extraScrollHeight={100} // Aumentado ligeramente para compensar teclados altos
+      enableAutomaticScroll={true}
       keyboardOpeningTime={0}
     >
-      {/* StatusBar blanca con texto oscuro */}
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -84,6 +84,9 @@ const ERDScreen = ({ navigation, route }) => {
           >
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
+          
+          {/* Espaciador extra para asegurar que el teclado no tape el botón */}
+          <View style={{ height: 20 }} />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAwareScrollView>
@@ -94,7 +97,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingTop: height * 0.04,
-    paddingBottom: height * 0.06,
+    paddingBottom: height * 0.05, // Ajustado para no dejar demasiado aire abajo
   },
 
   container: {
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
 
   imageCard: {
     width: '100%',
-    backgroundColor: '#FFFFFF', // <- fondo blanco
+    backgroundColor: '#FFFFFF',
     borderRadius: 22,
     paddingVertical: 20,
     paddingHorizontal: 16,
@@ -128,6 +131,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
 
   image: {
@@ -147,7 +154,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingHorizontal: 18,
     fontSize: 17,
-    backgroundColor: '#FFFFFF', // <- fondo blanco
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#D1D1D6',
     color: '#000',

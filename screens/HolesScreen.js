@@ -1,4 +1,3 @@
-// HolesScreen.js
 import React, { useState } from 'react';
 import {
   View,
@@ -7,11 +6,11 @@ import {
   TouchableOpacity,
   Alert,
   Dimensions,
-  StatusBar, // <- importamos StatusBar
+  StatusBar,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import RNPickerSelect from 'react-native-picker-select';
-import { Ionicons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,12 +18,12 @@ const HolesScreen = ({ navigation }) => {
   const [agujeros, setAgujeros] = useState(null);
 
   const options = [
-    { label: '16 holes', value: 16 },
-    { label: '20 holes', value: 20 },
-    { label: '24 holes', value: 24 },
-    { label: '28 holes', value: 28 },
-    { label: '32 holes', value: 32 },
-    { label: '36 holes', value: 36 },
+    { label: ' 16 holes', value: 16 },
+    { label: ' 20 holes', value: 20 },
+    { label: ' 24 holes', value: 24 },
+    { label: ' 28 holes', value: 28 },
+    { label: ' 32 holes', value: 32 },
+    { label: ' 36 holes', value: 36 },
   ];
 
   const handleNext = () => {
@@ -37,27 +36,36 @@ const HolesScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* StatusBar blanca con texto oscuro */}
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
       <View style={styles.container}>
         <Text style={styles.title}>Select number of holes</Text>
 
-        <RNPickerSelect
-          onValueChange={(value) => setAgujeros(value)}
-          items={options}
-          placeholder={{ label: 'Choose an option...', value: null }}
-          value={agujeros}
-          useNativeAndroidPickerStyle={false}
-          style={pickerSelectStyles}
-          Icon={() => (
-            <View pointerEvents="none" style={pickerSelectStyles.iconContainer}>
-              <Ionicons name="chevron-down" size={24} color="#666" />
-            </View>
-          )}
-        />
+        <View style={styles.pickerWrapper}>
+          <Picker
+            selectedValue={agujeros}
+            onValueChange={(itemValue) => setAgujeros(itemValue)}
+            dropdownIconColor="#666666" 
+            mode="dropdown" 
+            style={styles.pickerElement}
+          >
+            <Picker.Item label=" Choose an option..." value={null} color="#999" />
+            {options.map((opt) => (
+              <Picker.Item 
+                key={opt.value} 
+                label={opt.label} 
+                value={opt.value} 
+                color="#000000"
+              />
+            ))}
+          </Picker>
+        </View>
 
-        <TouchableOpacity onPress={handleNext} style={styles.button} activeOpacity={0.15}>
+        <TouchableOpacity 
+          onPress={handleNext} 
+          style={styles.button} 
+          activeOpacity={0.7}
+        >
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
       </View>
@@ -68,11 +76,11 @@ const HolesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF', // <- fondo blanco
+    backgroundColor: '#FFFFFF',
   },
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF', // <- fondo blanco
+    backgroundColor: '#FFFFFF',
     paddingTop: height * 0.04,
     paddingHorizontal: width * 0.05,
     alignItems: 'center',
@@ -80,19 +88,38 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 20,
     color: '#1C1C1E',
     textAlign: 'center',
-    fontFamily: 'sans-serif-condensed',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-condensed' : 'System',
+  },
+  pickerWrapper: {
+    width: width * 0.9,
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 30, 
+    backgroundColor: '#FFFFFF',
+    overflow: 'hidden',
+    justifyContent: 'center',
+    height: 55,
+    marginBottom: 25,
+  },
+  pickerElement: {
+    width: '100%',
+    color: '#000000',
   },
   button: {
-    width: width * 0.93,
-    backgroundColor: '#1100adff',
+    width: width * 0.9,
+    backgroundColor: '#1100ad',
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
-    marginTop: 20,
-    elevation: 5,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    
   },
   buttonText: {
     color: '#FFFFFF',
@@ -100,25 +127,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-const pickerSelectStyles = {
-  inputAndroid: {
-    fontSize: 16,
-    fontFamily: 'sans-serif-condensed',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 30,
-    color: 'black',
-    paddingRight: 40,
-    marginBottom: 10,
-    backgroundColor: '#FFFFFF', 
-  },
-  iconContainer: {
-    top: 5,
-    right: 5,
-  },
-};
 
 export default HolesScreen;

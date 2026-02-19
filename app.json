@@ -4,7 +4,7 @@
     "slug": "calculadora-de-radios",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/imagen6.png",
+    "icon": "./assets/imagen8.png",
     "userInterfaceStyle": "light",
 
     "splash": {
@@ -25,7 +25,7 @@
 
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/imagen6.png",
+        "foregroundImage": "./assets/imagen8.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": false,
