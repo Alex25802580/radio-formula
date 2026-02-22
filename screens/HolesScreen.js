@@ -10,21 +10,24 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const { width, height } = Dimensions.get('window');
 
 const HolesScreen = ({ navigation }) => {
+  const [open, setOpen] = useState(false);
   const [agujeros, setAgujeros] = useState(null);
-
-  const options = [
-    { label: ' 16 holes', value: 16 },
-    { label: ' 20 holes', value: 20 },
-    { label: ' 24 holes', value: 24 },
-    { label: ' 28 holes', value: 28 },
-    { label: ' 32 holes', value: 32 },
-    { label: ' 36 holes', value: 36 },
-  ];
+  const [items, setItems] = useState([
+    { label: '16 holes', value: 16 },
+    { label: '18 holes', value: 18 },
+    { label: '20 holes', value: 20 },
+    { label: '24 holes', value: 24 },
+    { label: '28 holes', value: 28 },
+    { label: '32 holes', value: 32 },
+    { label: '36 holes', value: 36 },
+    { label: '40 holes', value: 40 },
+    { label: '48 holes', value: 48 },
+  ]);
 
   const handleNext = () => {
     if (!agujeros) {
@@ -41,29 +44,29 @@ const HolesScreen = ({ navigation }) => {
       <View style={styles.container}>
         <Text style={styles.title}>Select number of holes</Text>
 
-        <View style={styles.pickerWrapper}>
-          <Picker
-            selectedValue={agujeros}
-            onValueChange={(itemValue) => setAgujeros(itemValue)}
-            dropdownIconColor="#666666" 
-            mode="dropdown" 
-            style={styles.pickerElement}
-          >
-            <Picker.Item label=" Choose an option..." value={null} color="#999" />
-            {options.map((opt) => (
-              <Picker.Item 
-                key={opt.value} 
-                label={opt.label} 
-                value={opt.value} 
-                color="#000000"
-              />
-            ))}
-          </Picker>
+        {/* Dropdown personalizado */}
+        <View style={styles.dropdownWrapper}>
+          <DropDownPicker
+            open={open}
+            value={agujeros}
+            items={items}
+            setOpen={setOpen}
+            setValue={setAgujeros}
+            setItems={setItems}
+            placeholder="Choose an option..."
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainer}
+            textStyle={styles.dropdownText}
+            placeholderStyle={styles.placeholderStyle}
+            arrowIconStyle={{ tintColor: '#666666' }}
+            listMode="SCROLLVIEW"
+            maxHeight={500}   // 🔥 permite mostrar todo sin scroll
+          />
         </View>
 
-        <TouchableOpacity 
-          onPress={handleNext} 
-          style={styles.button} 
+        <TouchableOpacity
+          onPress={handleNext}
+          style={styles.button}
           activeOpacity={0.7}
         >
           <Text style={styles.buttonText}>Next</Text>
@@ -84,6 +87,7 @@ const styles = StyleSheet.create({
     paddingTop: height * 0.04,
     paddingHorizontal: width * 0.05,
     alignItems: 'center',
+    zIndex: 1,
   },
   title: {
     fontSize: 30,
@@ -93,21 +97,34 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-condensed' : 'System',
   },
-  pickerWrapper: {
+
+  /* DROPDOWN */
+  dropdownWrapper: {
     width: width * 0.9,
+    marginBottom: 25,
+    zIndex: 1000, // 🔥 necesario en Android
+  },
+  dropdown: {
     borderWidth: 1,
     borderColor: '#CCCCCC',
-    borderRadius: 30, 
+    borderRadius: 30,
     backgroundColor: '#FFFFFF',
-    overflow: 'hidden',
-    justifyContent: 'center',
     height: 55,
-    marginBottom: 25,
   },
-  pickerElement: {
-    width: '100%',
+  dropdownContainer: {
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 15,
+    maxHeight: 500, // 🔥 evita que limite altura
+  },
+  dropdownText: {
     color: '#000000',
+    fontSize: 16,
   },
+  placeholderStyle: {
+    color: '#999999',
+  },
+
   button: {
     width: width * 0.9,
     backgroundColor: '#1100ad',
@@ -119,7 +136,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    
   },
   buttonText: {
     color: '#FFFFFF',
