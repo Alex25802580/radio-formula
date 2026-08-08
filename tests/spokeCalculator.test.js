@@ -114,10 +114,10 @@ test('rejects blank and physically implausible ERD values', () => {
 test('rejects impossible PCD relative to ERD', () => {
   const validation = validateWheel({
     holes: 32,
-    erd: 600,
+    erd: 200,
     rimOffset: 0,
     rimOffsetDirection: RIM_OFFSET_DIRECTIONS.DRIVE,
-    leftPcd: 650,
+    leftPcd: 250,
     rightPcd: 58,
     leftFlangeDistance: 35,
     rightFlangeDistance: 20,
