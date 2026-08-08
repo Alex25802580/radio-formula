@@ -1,29 +1,33 @@
 # Spoke Calculator
 
-Spoke Calculator is a React Native / Expo app for calculating bicycle spoke length from real wheel, rim and hub measurements.
+Spoke Calculator es una aplicación desarrollada con React Native y Expo para calcular la longitud de los radios de una rueda de bicicleta a partir de las medidas de la llanta y el buje.
 
-The app was created from a real need while building bicycle wheels and is published on Google Play with more than 1,000 downloads.
+La aplicación nació de una necesidad real durante mi trabajo montando bicicletas y ruedas. Está publicada en Google Play y cuenta con más de 1.000 descargas.
 
-[View Spoke Calculator on Google Play](https://play.google.com/store/apps/details?id=com.alejandrocifuentes.calculadoraderadios)
+[Ver Spoke Calculator en Google Play](https://play.google.com/store/apps/details?id=com.alejandrocifuentes.calculadoraderadios)
 
-## What it calculates
+## ¿Qué calcula?
 
-The calculator uses:
+Para realizar el cálculo se introducen los siguientes datos:
 
-- number of spoke holes
-- ERD (Effective Rim Diameter)
-- rim offset and its direction
-- left and right hub PCD (Pitch Circle Diameter)
-- left and right flange distance from the hub center
-- number of spoke crosses
+- número de agujeros de la rueda;
+- ERD (Effective Rim Diameter);
+- offset de la llanta y su dirección;
+- PCD izquierdo y derecho del buje (Pitch Circle Diameter);
+- distancia de la brida izquierda y derecha respecto al centro del buje;
+- número de cruces.
 
-It returns the required spoke length for the non-drive and drive sides independently.
+La aplicación calcula de forma independiente la longitud necesaria de los radios del lado izquierdo (non-drive side) y derecho (drive side).
 
-## Calculation
+## Cálculo
 
-The core calculation is isolated from the user interface in `utils/spokeCalculator.js`.
+La lógica matemática está separada de la interfaz y se encuentra en:
 
-For each side of the wheel:
+```text
+utils/spokeCalculator.js
+```
+
+Para cada lado de la rueda se utiliza la siguiente fórmula:
 
 ```text
 L = sqrt(
@@ -33,83 +37,96 @@ L = sqrt(
 )
 ```
 
-where:
+Donde:
 
-- `R` is half the ERD
-- `r` is half the flange PCD
-- `d` is the flange-to-rim-plane distance
-- `alpha` is derived from the spoke count and crossing pattern
+- `R` es la mitad del ERD;
+- `r` es la mitad del PCD de la brida;
+- `d` es la distancia entre la brida y el plano de la llanta;
+- `alpha` se calcula a partir del número de radios y el número de cruces.
 
-Asymmetric rims are handled by adjusting the effective left and right flange distances according to the selected rim-offset direction.
+En llantas asimétricas, la aplicación ajusta las distancias izquierda y derecha según el offset y la dirección seleccionada.
 
-## Reliability
+## Tests
 
-The calculation logic is separated from React Native so it can be tested independently.
+La lógica del cálculo se puede comprobar de manera independiente mediante tests automáticos.
 
-Regression tests cover:
+Actualmente se comprueban casos como:
 
-- a standard 32-hole / 3-cross wheel
-- asymmetric hub dimensions
-- radial lacing
-- drive-side and non-drive-side rim offsets
-- decimal values written with a comma or dot
-- invalid and physically implausible measurements
+- rueda de 32 agujeros y 3 cruces;
+- medidas diferentes en ambos lados del buje;
+- radiado radial;
+- offset hacia drive side y non-drive side;
+- valores decimales introducidos con punto o coma;
+- medidas inválidas o físicamente incoherentes.
 
-Run the tests with:
+Para ejecutar los tests:
 
 ```bash
 npm test
 ```
 
-## Saved wheels
+## Ruedas guardadas
 
-Calculated wheels can be saved locally on the device with AsyncStorage.
+Los cálculos se pueden guardar localmente en el dispositivo mediante AsyncStorage.
 
-New saved entries include the full set of wheel measurements as well as the result. The app remains compatible with wheels saved by previous versions.
+Las ruedas nuevas guardan tanto el resultado como las medidas utilizadas para realizar el cálculo. La aplicación también mantiene compatibilidad con las ruedas guardadas por versiones anteriores.
 
-## Tech stack
+## Tecnologías
 
 - React Native
 - Expo
+- JavaScript
 - React Navigation
 - AsyncStorage
-- Node.js built-in test runner
+- Node.js (tests)
 
-## Run locally
+## Ejecutar el proyecto
 
-Requirements:
+Se necesita:
 
-- Node.js 18 or newer
-- npm
-- Expo / Android development environment for device or emulator builds
+- Node.js 18 o superior;
+- npm;
+- un entorno Android o Expo para ejecutar la aplicación.
 
-Install dependencies:
+Instalar las dependencias:
 
 ```bash
 npm install
 ```
 
-Start Expo:
+Ejecutar los tests:
+
+```bash
+npm test
+```
+
+Iniciar Expo:
 
 ```bash
 npm start
 ```
 
-Run on Android:
+Ejecutar en Android:
 
 ```bash
 npm run android
 ```
 
-## Project structure
+## Estructura principal
 
 ```text
-components/             Reusable input and choice screens
-screens/                App navigation screens
-utils/spokeCalculator.js  Calculation and validation logic
-tests/                  Automated calculation tests
+components/               Componentes reutilizables
+screens/                  Pantallas de la aplicación
+utils/spokeCalculator.js  Lógica de cálculo y validaciones
+tests/                    Tests automáticos
 ```
 
-## Author
+## Sobre el proyecto
 
-Developed by Alejandro Cifuentes.
+Spoke Calculator fue desarrollada de forma individual a partir de una necesidad real relacionada con el montaje de ruedas de bicicleta.
+
+El objetivo del proyecto es ofrecer una herramienta sencilla para obtener la longitud correcta de los radios a partir de las medidas de una rueda, evitando depender de tablas o realizar el cálculo manualmente.
+
+## Autor
+
+Alejandro Cifuentes
