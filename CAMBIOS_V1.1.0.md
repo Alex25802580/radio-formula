@@ -460,8 +460,6 @@ RuedasGuardadas.js   -> SavedWheelsScreen.js
 
 Los archivos antiguos se eliminaron de la rama después de actualizar sus imports. Al estar todo versionado con Git, siguen siendo recuperables desde el historial si alguna vez fuera necesario.
 
-También se limpiaron comentarios temporales del desarrollo y ajustes del tipo `AJUSTA ESTE VALOR`, emojis de depuración y comentarios que simplemente repetían lo que hacía la línea siguiente.
-
 ## 10. `radioformulafinalboss` pasa a `spoke-calculator`
 
 ### Antes
@@ -480,7 +478,6 @@ También se limpiaron comentarios temporales del desarrollo y ajustes del tipo `
 
 El cambio también se sincronizó en `package-lock.json`.
 
-El nombre anterior no afectaba al funcionamiento, pero era un nombre interno poco apropiado para un repositorio público que puede ser revisado durante un proceso de selección.
 
 ## 11. Mejora del sistema de ruedas guardadas
 
